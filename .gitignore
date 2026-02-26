@@ -1,0 +1,10 @@
+.venv
+.env
+discord.log 
+output.json
+output2.json 
+test.html
+*/__pycache__
+__pycache__
+websocket/test.py
+websocket/contoh.py
