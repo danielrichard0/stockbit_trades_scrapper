@@ -73,17 +73,12 @@ def run():
             # print(json.dumps(data, indent=2)[:1000])
 
         # belum kepakai
-        def handle_sent(url, frame):
-            pass 
 
         page.goto("https://stockbit.com/login")
         with recaptchav3.SyncSolver(page) as solver:            
             token = solver.solve_recaptcha(timeout=60)  
-
-        page.on("websocket", on_websocket)
-        page.pause()
-
-      
         
-
+        page.on("websocket", on_websocket)
+        #page.pause()
+          
 run()
