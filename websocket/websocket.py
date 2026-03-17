@@ -12,8 +12,9 @@ def run():
         context = browser.new_context()
         page = context.new_page()
         data_retrieve = []
-        trigger_val = 100000000
-        api_url = 'http://127.0.0.1:5000/rt-alert'
+        trigger_val = 0
+        api_url = 'http://127.0.0.1:5000/alert/many'
+        temp = {'transactions' : [] } 
 
         def on_websocket(ws):
             print("🧠 WebSocket opened:", ws.url)
@@ -50,13 +51,18 @@ def run():
                 param['shares'] = data[3]['data']['value']
                 param['type'] = data[4]['data']
                 total_val = param['price'] * param['shares']
+
+                #positional = [param['code'], param['tick_time'], param['price'], param['shares'], param['type']]
+                temp['transactions'].append(param)
+                #print('temp : ', temp)
                # undef3 = data[7]['data']['results'][1]['data']['value']
 
                 # lebih dari 1 milyar
-                if total_val > trigger_val:
-                    requests.get(url=api_url, params=param)
-
-                    
+                #if total_val > trigger_val :
+                if len(temp['transactions']) >= 1000:
+                    response = requests.get(url=api_url, json=temp)
+                    print(response)
+                    temp['transactions'].clear()
                     # with open('output2.json', 'w') as json_file:
                     #     json.dump(data_retrieve, json_file, indent=4)                    
 
@@ -79,6 +85,6 @@ def run():
             token = solver.solve_recaptcha(timeout=60)  
         
         page.on("websocket", on_websocket)
-        #page.pause()
+        page.pause()
           
 run()

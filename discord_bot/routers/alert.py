@@ -1,10 +1,12 @@
 from fastapi import APIRouter 
-from discord_bot.dc_bot import  bot
+from dc_bot import  bot
 import discord
 from dotenv import load_dotenv
 import os
 from datetime import datetime
 from db import get_connection, Transactions
+from pydantic import BaseModel 
+from typing import List
 
 load_dotenv()
 img_url = os.getenv('STOCK_IMG_URL')
@@ -16,6 +18,17 @@ router = APIRouter(
 )
 
 trx = Transactions()
+
+class TransactionBody(BaseModel):
+    code : str
+    tick_time : str
+    price: float
+    shares: float
+    type: int
+
+class TranscationBodyBatch(BaseModel):
+    transactions: List[TransactionBody]
+    
 
 @router.get("/")
 async def rt_alert(code: str,tick_time: str, price: float, shares: int, type: int ):    
@@ -41,12 +54,21 @@ async def rt_alert(code: str,tick_time: str, price: float, shares: int, type: in
 
                 # save and caching to database
                 trx.trx_cache.append((code, 
-                                      datetime.strptime(tick_time,'%Y-%m-%d %H:%M:%s'), 
+                                      datetime.strptime(tick_time,'%Y-%m-%d %H:%M:%S'), 
                                       price, shares, type))
                 if len(trx.trx_cache) >= 100:
                     cursor = get_connection()
                     trx.save_transaction(cursor)
 
-                construct_url = img_url+code+'.png'                                
-                embed.set_thumbnail(url=construct_url)                    
-                await channel.send(embed=embed)
+                if (shares * price) > 1000000000:
+                    construct_url = img_url+code+'.png'                                
+                    embed.set_thumbnail(url=construct_url)                    
+                    await channel.send(embed=embed)
+
+
+@router.get("/many")
+async def rt_alert_many(TransBody: TranscationBodyBatch):     
+    formated_param = [tuple(a.model_dump().values()) for a in TransBody.transactions]
+    cursor = get_connection()
+    exec = trx.save_transactions_many(cursor, formated_param)      
+    return exec

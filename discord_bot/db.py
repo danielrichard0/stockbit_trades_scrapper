@@ -40,6 +40,24 @@ class Transactions():
             conn.rollback()
             return False    
         
+    def save_transactions_many(self, conn: mariadb.Connection, param: any )-> bool:
+        print('param : ', param)
+        cur = conn.cursor()
+        sql = """
+        INSERT INTO tbl_transactions(stock_code, tick_time, price, shares, type)
+        VALUES (?, ?, ?, ?, ?)
+        """                
+        try:
+            cur.executemany(sql, param)
+            conn.commit()
+            cur.close()
+            self.trx_cache = []
+            return True
+        except mariadb.Error as e:
+            print("Database Error : ", e)
+            conn.rollback()
+            return False            
+        
 if __name__ == '__main__':     
     conn = get_connection()
     trx = Transactions()

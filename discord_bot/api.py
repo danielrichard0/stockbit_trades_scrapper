@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from discord_bot.dc_bot import  bot
+from dc_bot import bot
 import discord 
 import asyncio
 import os
