@@ -1,3 +1,11 @@
+"""
+-----> NOT USED <-----
+initially I wanted to scrap based on realtime running trade, listening on 
+websocket during day trade, but I threw away this idea after realizing I had to insert millions of data 
+that is too raw, not worth it.
+"""
+
+
 from playwright.sync_api import sync_playwright
 from playwright_recaptcha import recaptchav3
 from protobuf_decoder.protobuf_decoder import Parser
@@ -73,9 +81,6 @@ def run():
             #     json.dump(data_retrieve, json_file, indent=4)
 
             # return
-
-
-            # # wss://ws3.stockbit.com/primus/507/_bx8ya7s/websocket
             # print(json.dumps(data, indent=2)[:1000])
 
         # belum kepakai
