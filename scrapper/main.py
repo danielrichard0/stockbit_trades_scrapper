@@ -13,6 +13,8 @@ import ast
 import json
 from datetime import datetime
 import requests
+import os
+from dotenv import load_dotenv
 
 def run():
     with sync_playwright() as p:
@@ -23,6 +25,8 @@ def run():
         trigger_val = 0
         api_url = 'http://127.0.0.1:5000/alert/many'
         temp = {'transactions' : [] } 
+        load_dotenv()
+        url = os.getenv('PLATFORM')
 
         def on_websocket(ws):
             print("🧠 WebSocket opened:", ws.url)
@@ -31,9 +35,7 @@ def run():
             #ws.on("framesent", lambda frame: handle_sent(ws.url, frame))
 
         # harus memfilter websocket hanya yang running trade saja
-        def handle_frame(url, frame)->bool:
-            if not url == 'wss://wss-jkt.trading.stockbit.com/ws':
-                return False           
+        def handle_frame(url, frame)->bool:           
                         
             payload_hex = frame.hex() 
             try:
