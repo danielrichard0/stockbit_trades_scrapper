@@ -6,7 +6,7 @@ All data is collected using a custom scraper located in scrapper/scrapper.py, wh
 - Stock listings
 - Broker lists from BEI/IDX
 <br />
-<img width="800" height="450" alt="ezgif-1f1b2afe746d4a60" src="https://github.com/user-attachments/assets/22b05936-baff-41f5-bf65-fb8964ad52b5" />
+<img width="800" height="450" alt="ezgif-1f1b2afe746d4a60" src="https://github.com/user-attachments/assets/22b05936-baff-41f5-bf65-fb8964ad52b5" /><br />
 The scraper navigates through the broker summary pages of a trading platform, where users can specify:
 
 - The stocks to analyze
